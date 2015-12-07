@@ -1,0 +1,8 @@
+{
+    "require": {
+        "league/csv": "^7.2",
+        "cocur/slugify": "^1.4",
+        "brandonwamboldt/utilphp": "^1.1",
+        "monolog/monolog": "1.0.*"
+    }
+}
