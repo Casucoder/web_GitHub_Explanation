@@ -8,4 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'utilphp\\' => array($vendorDir . '/brandonwamboldt/utilphp/src'),
     'Monolog' => array($vendorDir . '/monolog/monolog/src'),
+    'Commando' => array($vendorDir . '/nategood/commando/src'),
+    'Colors' => array($vendorDir . '/kevinlebrun/colors.php/lib'),
 );

@@ -1,0 +1,193 @@
+h1. MySQL Lite
+
+Author: James Brumond
+Version 0.1.1-b
+
+Copyright 2010 James Brumond
+Dual licensed under MIT and GPL
+
+h2. Description
+
+A very lightweight MySQL interface class for PHP.
+
+h2. Basic Usage
+
+MySQL Lite is very easy to use. To start using it, drop the @mysql-lite.php@ file into your website directory. You can give the class config data on-the-fly, but it's probably easier to use the built-in config file functionality, so create a file for holding your config data. The name doesn't matter; Call it what you like. Your config file should contain a single PHP array similar to the following:
+
+<pre><code><?php
+
+/*
+ * MySQL Lite Configuration File
+ */
+
+// The server hostname
+$db['hostname'] = 'localhost';
+
+// The user to login with
+$db['username'] = 'some_user';
+
+// The password to login with
+$db['password'] = 'some_pass';
+
+// The database to use
+$db['database'] = 'db_my_database';
+
+/* End of file db-config.php */</code></pre>
+
+h3. PHP 5
+
+If you are using PHP5+, then you have method chaining, and therefore can use MySQL Lite the really awesome way. MySQL Lite contains a function called @DB()@ which both creates and returns a single, static instance of the @Database_connection@ class. Because of this, you can use MySQL Lite like so:
+
+<pre><code>// Read/output an entire table
+print_r(
+	DB('path/to/config.php')->select('* from my_table')
+);</code></pre>
+
+Pretty slick, right? A full example of using MySQL Lite might look something like this:
+
+<pre><code><?php
+
+/*
+ * An example of MySQL Lite in PHP5
+ */
+
+require 'mysql-lite.php';
+
+// Read the config file
+DB('path/to/config.php');
+
+// Run a query
+$result = DB()->select('* from my_table where id=1');
+
+// Check for errors
+if (DB()->last_error()) {
+	echo 'Uh oh! A database error occured: '.DB()->last_error();
+}
+
+// Output the results
+print_r($result);
+
+/* End of file example.php */</code></pre>
+
+h3. PHP 4
+
+If you are using PHP <= 4, then you will have to do things the boring way. You cannot use the @DB()@ function with its method chaining awesomeness; you have to do things the normal OOP(Object Oriented Programming) way. For example, the same code above, in PHP 4, would be written as:
+
+<pre><code><?php
+
+/*
+ * An example of MySQL Lite in PHP4
+ */
+
+require 'mysql-lite.php';
+
+// Read the config file
+$DB = new Database_connection('path/to/config.php');
+
+// Run a query
+$result = $DB->select('* from my_table where id=1');
+
+// Check for errors
+if ($DB->last_error()) {
+	echo 'Uh oh! A database error occured: '.$DB->last_error();
+}
+
+// Output the result
+print_r($result);
+
+/* End of file example.php */</code></pre>
+
+Still quite clean looking and graceful, but not quite as cool.
+
+h2. Documentation
+
+Below is the full API documentation. This library is actually quite powerful, do not let its size deceve you.
+
+h3. DB()
+
+The @DB()@ function can be used in three different ways. One, it can be used without parameters to return the stored static instance of @Database_connection@, eg.
+
+bc. DB()->query(...)
+
+Second, it can be given a file path parameter, and third, an array parameter. In the last two instances, the data recieved will be used as configuration data to create a new @Database_connection@ instance, eg.
+
+<pre><code>DB('path/to/config.php')
+DB(array(
+	'hostname' => ...,
+	'username' => ...,
+	'password' => ...,
+	'database' => ...
+))</code></pre>
+
+*Note:* if you use the @DB()@ function with a parameter more then once, only the last connection is remembered; others are discarded.
+*Note:* the @DB()@ function is only available in PHP5+ and will trigger and error in any version previous.
+
+h3. Database_connection::__construct
+
+bc. void Database_connection::__construct ( mixed $config )
+
+The main constructor, this function can take either a string file path to a config file or an array containing config values.
+
+h3. Database_connection::query
+
+bc. mixed Database_connection::query ( string $query[, string &$err ])
+
+Runs a query on the database, returning the result. If an error occurs, the result will be stored in @$err@, otherwise, @$err@ will be @NULL@.
+
+h3. Database_connection::select
+
+bc. array Database_connection::select ( string $query[, string &$err ])
+
+Runs a select query on the database, returning the resulting nested associative array structure. If an error occurs, the result will be stored in @$err@, otherwise, @$err@ will be @NULL@.
+
+h3. Database_connection::source
+
+bc. bool Database_connection::source ( string $filepath[, bool $stop_on_error = false ])
+
+Runs all of the SQL commands inside of the given file. If a second parameter is given, it will determine whether the function should stop running when an error occurs.
+
+h3. Database_connection::errors
+
+bc. array Database_connection::errors ( void )
+
+MySQL Lite holds on to a stack of all errors that have occured in SQL commands. This function returns the entire error stack.
+
+h3. Database_connection::clear_error_stack
+
+bc. void Database_connection::clear_error_stack ( void )
+
+Clears out all entries in the internal error stack.
+
+h3. Database_connection::last_error
+
+bc. string Database_connection::last_error ( void )
+
+Returns the last error to occur. If no errors have occured (or, no errors have occured since the last stack clear), this function will return @NULL@.
+
+h2. Feedback
+
+Please report all bugs and make all feature requests using the GitHub "Issue Tracker":https://github.com/kbjr/MySQL-Lite/issues and make all code submissions using a GitHub pull request. Thank You :)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
